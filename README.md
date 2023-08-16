@@ -20,5 +20,5 @@ Jetpack Odie Plugin is licensed under [GNU General Public License v2 (or later)]
 
 ## Meta 
 
-~Current Version:0.3.1-alpha~
+~Current Version:0.3.2-alpha~
 
