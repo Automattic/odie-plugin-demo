@@ -115,6 +115,21 @@ add_filter(
 	}
 );
 
+require_once( 'updater.php' );
+if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
+	$config = array(
+		'slug' => ODIE_PLUGIN_DEMO_SLUG, // this is the slug of your plugin
+		'proper_folder_name' => ODIE_PLUGIN_DEMO_NAME, // this is the name of the folder your plugin lives in
+		'api_url' => 'https://api.github.com/repos/Automattic/odie-plugin-demo', // the GitHub API url of your GitHub repo
+		'raw_url' => 'https://raw.github.com/Automattic/odie-plugin-demo/trunk', // the GitHub raw url of your GitHub repo
+		'github_url' => 'https://github.com/Automattic/odie-plugin-demo', // the GitHub url of your GitHub repo
+		'zip_url' => 'https://github.com/Automattic/odie-plugin-demo/zipball/trunk', // the zip url of the GitHub repo
+		'sslverify' => true, // whether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
+		'readme' => 'README.md', // which file to use as the readme for the version number
+	);
+	new WP_GitHub_Updater($config);
+}
+
 register_deactivation_hook( __FILE__, array( 'Odie_Plugin_Demo', 'plugin_deactivation' ) );
 
 // Main plugin class.
