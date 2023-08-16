@@ -1,0 +1,53 @@
+{
+	"private": true,
+	"description": "Odie in a WP plugin!.",
+	"homepage": "https://jetpack.com",
+	"bugs": {
+		"url": "https://github.com/Automattic/jetpack/labels/[Plugin] Odie Plugin"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Automattic/jetpack.git",
+		"directory": "projects/plugins/odie-plugin"
+	},
+	"license": "GPL-2.0-or-later",
+	"author": "Automattic",
+	"scripts": {
+		"build": "pnpm run clean && pnpm run build-client",
+		"build-client": "webpack",
+		"build-concurrently": "pnpm run clean && concurrently 'pnpm:build-client'",
+		"build-production-concurrently": "pnpm run clean && concurrently 'NODE_ENV=production BABEL_ENV=production pnpm run build-client' && pnpm run validate",
+		"clean": "rm -rf build/",
+		"test": "jest",
+		"validate": "pnpm exec validate-es build/",
+		"watch": "pnpm run build && webpack watch"
+	},
+	"browserslist": [
+		"extends @wordpress/browserslist-config"
+	],
+	"dependencies": {
+		"@automattic/jetpack-base-styles": "^0.6.5",
+		"@automattic/jetpack-components": "^0.41.1",
+		"@wordpress/data": "9.8.0",
+		"@wordpress/date": "4.38.0",
+		"@wordpress/element": "5.15.0",
+		"@wordpress/i18n": "4.38.0",
+		"react": "18.2.0",
+		"react-dom": "18.2.0"
+	},
+	"devDependencies": {
+		"@babel/core": "7.22.9",
+		"@babel/preset-env": "7.22.9",
+		"@babel/runtime": "7.22.6",
+		"@wordpress/browserslist-config": "5.21.0",
+		"babel-jest": "29.4.3",
+		"concurrently": "7.6.0",
+		"sass": "1.64.1",
+		"sass-loader": "12.4.0",
+		"webpack": "5.76.0",
+		"webpack-cli": "4.9.1"
+	},
+	"engines": {
+		"node": "^18.13.0"
+	}
+}
