@@ -38,7 +38,7 @@ class Odie_Plugin_Demo {
 		);
 		add_action( 'load-' . $page_suffix, array( $this, 'admin_init' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'wp_footer', array( __CLASS__, 'inject_jetpack_widget_root' ) );
+		add_action( 'wp_footer', array( __CLASS__, 'inject_odie_widget_root' ) );
 
 		// Init Jetpack packages
 		add_action(
