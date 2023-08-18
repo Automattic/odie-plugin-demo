@@ -3,7 +3,7 @@
         'name' => 'automattic/odie-plugin-demo',
         'pretty_version' => 'dev-trunk',
         'version' => 'dev-trunk',
-        'reference' => 'd0bba61bd908771ec7394702f31d1f8e9089e85e',
+        'reference' => 'c8f48787e69d0bea9e2e42f807c4c6e9789bc4c2',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -220,7 +220,7 @@
         'automattic/odie-plugin-demo' => array(
             'pretty_version' => 'dev-trunk',
             'version' => 'dev-trunk',
-            'reference' => 'd0bba61bd908771ec7394702f31d1f8e9089e85e',
+            'reference' => 'c8f48787e69d0bea9e2e42f807c4c6e9789bc4c2',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

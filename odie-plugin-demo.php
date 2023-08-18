@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * Plugin Name: Odie Plugin Demo
  * Plugin URI: https://wordpress.org/plugins/odie-plugin-demo
  * Description: Odie in a WP plugin!.
@@ -118,8 +117,8 @@ add_filter(
 require_once( 'updater.php' );
 if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
 	$config = array(
-		'slug' => ODIE_PLUGIN_DEMO_SLUG, // this is the slug of your plugin
-		'proper_folder_name' => ODIE_PLUGIN_DEMO_NAME, // this is the name of the folder your plugin lives in
+		'slug' => 'odie-plugin-demo', // this is the slug of your plugin
+		// 'proper_folder_name' => 'odie-plugin-demo', // this is the name of the folder your plugin lives in
 		'api_url' => 'https://api.github.com/repos/Automattic/odie-plugin-demo', // the GitHub API url of your GitHub repo
 		'raw_url' => 'https://raw.github.com/Automattic/odie-plugin-demo/trunk', // the GitHub raw url of your GitHub repo
 		'github_url' => 'https://github.com/Automattic/odie-plugin-demo', // the GitHub url of your GitHub repo
@@ -130,6 +129,7 @@ if (is_admin()) { // note the use of is_admin() to double check that this is hap
 		'readme' => 'README.md', // which file to use as the readme for the version number
 		'access_token' => '', // Access private repositories by authorizing under Plugins > GitHub Updates when this example plugin is installed
 	);
+	// error_log( 'is_admin' );
 	// TODO: Maybe get this to work. 
 	// new WP_GitHub_Updater($config);
 }

@@ -38,7 +38,10 @@ class Odie_Plugin_Demo {
 		);
 		add_action( 'load-' . $page_suffix, array( $this, 'admin_init' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'wp_footer', array( __CLASS__, 'inject_odie_widget_root' ) );
+		if ( ! is_admin() ) {
+			// add_action( 'wp_footer', array( $this, 'inject_odie_widget_root' ) );
+			// add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+		}
 
 		// Init Jetpack packages
 		add_action(
@@ -55,7 +58,7 @@ class Odie_Plugin_Demo {
 					)
 				);
 				// Sync package.
-				$config->ensure( 'sync', Data_Settings::MUST_SYNC_DATA_SETTINGS );
+				$config->ensure( 'sync' );
 
 				// Identity crisis package.
 				$config->ensure( 'identity_crisis' );
@@ -104,12 +107,12 @@ class Odie_Plugin_Demo {
 	 */
 	public function enqueue_admin_scripts() {
 		$connection = new Connection_Manager();
-		if ( ! $connection->is_user_connected() ) {
+		if ( ! $connection->is_connected() ) {
 			return;
 		}
-		wp_enqueue_script( 'wpcom-odie-widget', '//widgets.wp.com/odie/widget.js', array(), time(), true );
 
-		$js_data = array(
+		wp_enqueue_script( 'wpcom-odie-widget', '//widgets.wp.com/odie/widget.js', array(), time(), true );
+		wp_localize_script( 'wpcom-odie-widget', 'wpcomOdieWidget', array(
 			'isRunningInJetpack' => true,
 			'jetpackXhrParams'   => array(
 				'apiRoot'     => esc_url_raw( rest_url() ),
@@ -117,10 +120,11 @@ class Odie_Plugin_Demo {
 			),
 			'authToken'          => 'wpcom-proxy-request',
 			'botJids'            => array( 'wapuu-bot@xmpp.jetpacksandbox.com' ),
+			'siteId'             => $connection::get_site_id(),
+			'service'            => 'wss://xmpp.jetpacksandbox.com:5443/ws',
+			'userJid'            => "dereksmart@xmpp.jetpacksandbox.com",
 			// 'botConfigUrl'       => esc_url_raw( rest_url( '/odie-plugin-demo/v1/bot-config' ) ),
-		);
-		$js_config_data = 'window.JetpackXhrParams = ' . wp_json_encode( $js_data ) . ';';
-		wp_add_inline_script( 'wpcom-odie-widget', $js_config_data, 'before' );
+		) );
 		wp_enqueue_script( 
 			'jetpack-odie-js',
 			plugins_url( '/src/js/odie.js', ODIE_PLUGIN_DEMO_ROOT_FILE_RELATIVE_PATH ),

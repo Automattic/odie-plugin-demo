@@ -176,6 +176,10 @@ class WP_GitHub_Updater {
 		if ( ! isset( $this->config['readme'] ) )
 			$this->config['readme'] = 'README.md';
 
+
+		error_log( 'set_defaults' );
+		error_log( print_r( $this->config, 1 ) );
+
 	}
 
 
@@ -298,7 +302,7 @@ class WP_GitHub_Updater {
 				$github_data = json_decode( $github_data['body'] );
 
 				// refresh every 6 hours
-				set_site_transient( md5($this->config['slug']).'_github_data', $github_data, 60*60*6 );
+				set_site_transient( md5($this->config['slug']).'_github_data', $github_data, MINUTE_IN_SECONDS );
 			}
 
 			// Store the data in this class instance for future calls
@@ -317,6 +321,8 @@ class WP_GitHub_Updater {
 	 */
 	public function get_date() {
 		$_date = $this->get_github_data();
+		error_log( 'date' );
+		error_log( print_r( $_date, 1 ) );
 		return ( !empty( $_date->updated_at ) ) ? date( 'Y-m-d', strtotime( $_date->updated_at ) ) : false;
 	}
 
@@ -341,7 +347,9 @@ class WP_GitHub_Updater {
 	 */
 	public function get_plugin_data() {
 		include_once ABSPATH.'/wp-admin/includes/plugin.php';
-		$data = get_plugin_data( WP_PLUGIN_DIR.'/'.$this->config['slug'] );
+		$data = get_plugin_data( WP_PLUGIN_DIR.'/'.ODIE_PLUGIN_DEMO_ROOT_FILE_RELATIVE_PATH );
+		error_log( 'data' );
+		error_log( print_r( $data, 1 ) );
 		return $data;
 	}
 
@@ -362,6 +370,9 @@ class WP_GitHub_Updater {
 
 		// check the version and decide if it's new
 		$update = version_compare( $this->config['new_version'], $this->config['version'] );
+
+		error_log( 'update?' );
+		error_log( $update );
 
 		if ( 1 === $update ) {
 			$response = new stdClass;
@@ -405,6 +416,9 @@ class WP_GitHub_Updater {
 		$response->last_updated = $this->config['last_updated'];
 		$response->sections = array( 'description' => $this->config['description'] );
 		$response->download_link = $this->config['zip_url'];
+
+		error_log( 'plugin_info:' );
+		error_log( print_r( $response, 1 ) );
 
 		return $response;
 	}

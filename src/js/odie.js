@@ -5,12 +5,15 @@ document.addEventListener( 'DOMContentLoaded', function () {
 	button.addEventListener( 'click', function () {
 		// console.log( document.getElementById( 'jetpack-odie-root' ) );
 		if ( window.Odie && window.Odie.render ) {
-			console.log( document.getElementById( 'jetpack-odie-root' ) );
 			window.Odie.render( {
-				...window.JetpackXhrParams,
+				...wpcomOdieWidget.JetpackXhrParams,
 				domNode: document.getElementById( 'jetpack-odie-root' ),
-				// eslint-disable-next-line no-console
+				authToken: wpcomOdieWidget.authToken,
+				botJids: wpcomOdieWidget.botJids,
 				onLoaded: () => console.log( 'Chat is loaded.' ),
+				siteId: wpcomOdieWidget.siteId,
+				service: wpcomOdieWidget.service,
+				userJid: wpcomOdieWidget.userJid,
 			} );
 		}
 	} );
