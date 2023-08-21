@@ -110,6 +110,15 @@ class Odie_Plugin_Demo {
 			return;
 		}
 
+		// Build the user JID based on the connected wpcom user login.
+		$connected_user = $connection->get_connected_user_data();
+		if ( $connected_user['login'] ) {
+			$userJid = $connected_user['login'] . '@xmpp.jetpacksandbox.com';
+		} else {
+			// Non-connected wpcom users are not yet supported.
+			return;
+		}
+
 		wp_enqueue_script( 'wpcom-odie-widget', '//widgets.wp.com/odie/widget.js', array(), time(), true );
 		wp_localize_script( 'wpcom-odie-widget', 'wpcomOdieWidget', array(
 			'isRunningInJetpack' => true,
@@ -121,7 +130,7 @@ class Odie_Plugin_Demo {
 			'botJids'            => array( 'wapuu-bot@xmpp.jetpacksandbox.com' ),
 			'siteId'             => $connection::get_site_id(),
 			'service'            => 'wss://xmpp.jetpacksandbox.com:5443/ws',
-			'userJid'            => "dereksmart@xmpp.jetpacksandbox.com",
+			'userJid'            => $userJid,
 			// 'botConfigUrl'       => esc_url_raw( rest_url( '/odie-plugin-demo/v1/bot-config' ) ),
 		) );
 		wp_enqueue_script( 
