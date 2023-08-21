@@ -20,10 +20,14 @@ use Automattic\Jetpack\Odie_Plugin_Demo\REST_Controller as Odie_Rest_Controller;
  */
 class Odie_Plugin_Demo {
 
+	public static $connection_manager;
+
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
+		self::$connection_manager = new Connection_Manager( 'odie-plugin-demo' );
+
 		// Set up the REST authentication hooks.
 		Connection_Rest_Authentication::init();
 
@@ -35,7 +39,7 @@ class Odie_Plugin_Demo {
 			array( $this, 'plugin_settings_page' ),
 			99
 		);
-		add_action( 'load-' . $page_suffix, array( $this, 'admin_init' ) );
+		
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		if ( ! is_admin() ) {
 			// add_action( 'wp_footer', array( $this, 'inject_odie_widget_root' ) );
@@ -74,9 +78,13 @@ class Odie_Plugin_Demo {
 	 * Initialize the admin resources.
 	 */
 	public function admin_init() {
-		add_action( 'admin_notices', array( $this, 'maybe_connect_first_notice' ) );
-		add_action( 'admin_notices', array( $this, 'inject_odie_widget_root' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+		// Only load the widget when the current user is connected.
+		if ( self::$connection_manager->is_user_connected() ) {
+			add_action( 'admin_notices', array( $this, 'inject_odie_widget_root' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+		} else {
+			add_action( 'admin_notices', array( $this, 'notice_requires_connection' ) );
+		}
 	}
 
 	public function inject_odie_widget_root() {
@@ -88,11 +96,7 @@ class Odie_Plugin_Demo {
 	/**
 	 * Displays a notice to the user to connect to WordPress.com first.
 	 */
-	public static function maybe_connect_first_notice() {
-		$connection = new Connection_Manager();
-		if ( $connection->is_user_connected() ) {
-			return;
-		}
+	public static function notice_requires_connection() {
 		?>
 		<div class="notice notice-warning is-dismissible">
 			<p><?php esc_html_e( 'Odie Plugin Demo requires a wordpress.com connection.', 'odie-plugin-demo' ); ?></p>
@@ -102,23 +106,23 @@ class Odie_Plugin_Demo {
 	}
 
 	/**
+	 * Get the user JID based on the current connected wpcom user.
+	 * @return string|bool The user JID or false if not connected.
+	 */
+	public static function get_user_jid() {
+		// Build the user JID based on the connected wpcom user login.
+		$connected_user = self::$connection_manager->get_connected_user_data();
+		if ( empty( $connected_user['login'] ) ) {
+			return false;
+		}
+
+		return $connected_user['login'] . '@xmpp.jetpacksandbox.com';
+	}
+
+	/**
 	 * Enqueue plugin admin scripts and styles.
 	 */
 	public function enqueue_admin_scripts() {
-		$connection = new Connection_Manager();
-		if ( ! $connection->is_connected() ) {
-			return;
-		}
-
-		// Build the user JID based on the connected wpcom user login.
-		$connected_user = $connection->get_connected_user_data();
-		if ( $connected_user['login'] ) {
-			$userJid = $connected_user['login'] . '@xmpp.jetpacksandbox.com';
-		} else {
-			// Non-connected wpcom users are not yet supported.
-			return;
-		}
-
 		wp_enqueue_script( 'wpcom-odie-widget', '//widgets.wp.com/odie/widget.js', array(), time(), true );
 		wp_localize_script( 'wpcom-odie-widget', 'wpcomOdieWidget', array(
 			'isRunningInJetpack' => true,
@@ -128,9 +132,9 @@ class Odie_Plugin_Demo {
 			),
 			'authToken'          => 'wpcom-proxy-request',
 			'botJids'            => array( 'wapuu-bot@xmpp.jetpacksandbox.com' ),
-			'siteId'             => $connection::get_site_id(),
+			'siteId'             => self::$connection_manager::get_site_id(),
 			'service'            => 'wss://xmpp.jetpacksandbox.com:5443/ws',
-			'userJid'            => $userJid,
+			'userJid'            => self::get_user_jid(),
 			// 'botConfigUrl'       => esc_url_raw( rest_url( '/odie-plugin-demo/v1/bot-config' ) ),
 		) );
 		wp_enqueue_script( 

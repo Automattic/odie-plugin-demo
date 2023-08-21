@@ -139,7 +139,7 @@ class REST_Controller {
 
 		$error_msg = esc_html__(
 			'You are not allowed to perform this action.',
-			'jetpack-chatbot'
+			'odie-plugin-demo'
 		);
 
 		return new \WP_Error( 'rest_forbidden', $error_msg, array( 'status' => rest_authorization_required_code() ) );
