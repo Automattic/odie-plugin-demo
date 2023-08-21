@@ -13,7 +13,6 @@ use Automattic\Jetpack\Admin_UI\Admin_Menu;
 use Automattic\Jetpack\Connection\Manager as Connection_Manager;
 use Automattic\Jetpack\Connection\Rest_Authentication as Connection_Rest_Authentication;
 use Automattic\Jetpack\My_Jetpack\Initializer as My_Jetpack_Initializer;
-use Automattic\Jetpack\Sync\Data_Settings;
 use Automattic\Jetpack\Odie_Plugin_Demo\REST_Controller as Odie_Rest_Controller;
 
 /**

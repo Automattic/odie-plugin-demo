@@ -6,11 +6,11 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		// console.log( document.getElementById( 'jetpack-odie-root' ) );
 		if ( window.Odie && window.Odie.render ) {
 			window.Odie.render( {
-				...wpcomOdieWidget.JetpackXhrParams,
+				isRunningInJetpack: wpcomOdieWidget.isRunningInJetpack,
+				jetpackXhrParams: wpcomOdieWidget.jetpackXhrParams,
 				domNode: document.getElementById( 'jetpack-odie-root' ),
 				authToken: wpcomOdieWidget.authToken,
 				botJids: wpcomOdieWidget.botJids,
-				onLoaded: () => console.log( 'Chat is loaded.' ),
 				siteId: wpcomOdieWidget.siteId,
 				service: wpcomOdieWidget.service,
 				userJid: wpcomOdieWidget.userJid,
